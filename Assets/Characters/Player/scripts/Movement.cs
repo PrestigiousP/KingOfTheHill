@@ -4,26 +4,28 @@ namespace Characters.Player.scripts
 {
     public class Movement : MonoBehaviour
     {
-        [Header("Movement Settings")]
         public float moveSpeed = 5f;
-    
-        [Header("Mouse Look Settings")]
         public float mouseSensitivity = 2f;
-        public Transform cameraTransform;
         
-        private float _xRotation = 0f;
+        private Camera _camera;
+        private Vector3 _cameraPositionRelatedToPlayer;
+        private float _verticalAngle = 0f;
+        private float _horizontalAngle = 0f;
 
         private void Start()
         {
             // Lock and hide the cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
+            _camera = GetComponentInChildren<Camera>();
+            _cameraPositionRelatedToPlayer = _camera.transform.position - transform.position;
         }
 
         private void Update()
         {
             HandleMovement();
-            // HandleMouseLook();
+            HandleMouseLook();
         }
 
 
@@ -32,10 +34,15 @@ namespace Characters.Player.scripts
             // Get WASD input
             float horizontal = Input.GetAxis("Horizontal"); // A and D
             float vertical = Input.GetAxis("Vertical");     // W and S
+            
+            var direction = transform.position - _camera.transform.position;
+            var playerDirection = new Vector3(direction.x, 0, direction.z).normalized;
+            
+            var rightDirection = Quaternion.Euler(0, 90f, 0) * playerDirection;
         
             // Calculate movement direction relative to where the player is facing
-            var movement = transform.right * horizontal + transform.forward * vertical;
-        
+            var movement = rightDirection * horizontal + playerDirection * vertical;
+            
             // Move the player
             transform.position += movement * (moveSpeed * Time.deltaTime);
         }
@@ -46,17 +53,21 @@ namespace Characters.Player.scripts
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
         
-            // Rotate the camera up and down
-            _xRotation -= mouseY;
-            _xRotation = Mathf.Clamp(_xRotation, -90f, 90f); // Limit looking up/down
+            // Update angles
+            _horizontalAngle += mouseX;
+            _verticalAngle -= mouseY;
+            _verticalAngle = Mathf.Clamp(_verticalAngle, -89f, 89f); // Limit looking up/down
         
-            if (cameraTransform)
-            {
-                cameraTransform.localRotation = Quaternion.Euler(_xRotation, 0f, 0f);
-            }
+            // Rotate player horizontally
+            transform.rotation = Quaternion.Euler(0, _horizontalAngle, 0);
         
-            // Rotate the player left and right
-            transform.Rotate(Vector3.up * mouseX);
+            // Calculate camera orbit position
+            var rotation = Quaternion.Euler(_verticalAngle, _horizontalAngle, 0);
+            var newCameraPosition = transform.position + rotation * Vector3.back * _cameraPositionRelatedToPlayer.magnitude;
+        
+            // Update camera position and make it look at player
+            _camera.transform.position = newCameraPosition;
+            _camera.transform.LookAt(transform.position);
         }
     }
 }

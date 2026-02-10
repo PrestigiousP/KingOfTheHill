@@ -6,8 +6,11 @@ namespace Characters.Player.scripts
     {
         public float moveSpeed = 5f;
         public float mouseSensitivity = 2f;
-        
+        public float jumpForce = 5f;
+
         private Camera _camera;
+        private Rigidbody _rigidbody;
+        
         private Vector3 _cameraPositionRelatedToPlayer;
         private float _verticalAngle = 0f;
         private float _horizontalAngle = 0f;
@@ -17,6 +20,8 @@ namespace Characters.Player.scripts
             // Lock and hide the cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
+            _rigidbody = GetComponent<Rigidbody>();
             
             _camera = GetComponentInChildren<Camera>();
             _cameraPositionRelatedToPlayer = _camera.transform.position - transform.position;
@@ -28,6 +33,14 @@ namespace Characters.Player.scripts
             HandleMouseLook();
         }
 
+        private bool IsGrounded()
+        {
+            const float rayDistance = 1.1f; // Slightly longer than player height/collider
+
+            if (!Physics.Raycast(transform.position, Vector3.down, out var hit, rayDistance)) return false;
+            
+            return hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground");
+        }
 
         private void HandleMovement()
         {
@@ -35,11 +48,16 @@ namespace Characters.Player.scripts
             float horizontal = Input.GetAxis("Horizontal"); // A and D
             float vertical = Input.GetAxis("Vertical");     // W and S
             
+            if (IsGrounded() && Input.GetKeyDown(KeyCode.Space))
+            {
+                _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            }
+            
             var direction = transform.position - _camera.transform.position;
             var playerDirection = new Vector3(direction.x, 0, direction.z).normalized;
             
             var rightDirection = Quaternion.Euler(0, 90f, 0) * playerDirection;
-        
+            
             // Calculate movement direction relative to where the player is facing
             var movement = rightDirection * horizontal + playerDirection * vertical;
             

@@ -13,11 +13,12 @@ GameObject:
   - component: {fileID: 1560923485732691346}
   - component: {fileID: 1261623046676070153}
   - component: {fileID: 71253319826262066}
-  - component: {fileID: 4400153702155978859}
   - component: {fileID: 5084949306306966576}
+  - component: {fileID: 3739723096544462386}
+  - component: {fileID: 8516366745103554995}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,29 +147,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &4400153702155978859
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320243403379613895}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5084949306306966576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,7 +161,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.Movement
   moveSpeed: 5
   mouseSensitivity: 2
-  cameraTransform: {fileID: 0}
+  jumpForce: 10
+--- !u!114 &3739723096544462386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320243403379613895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ab8fe73b06047aa86e89f9d96b5ef5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.Attack
+  punchRange: 0.1
+  punchRadius: 0.05
+  punchForce: 5
+--- !u!114 &8516366745103554995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320243403379613895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249b95c9559d4b77a76d7613123ba275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.Player
 --- !u!1 &5069379272976303925
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +200,6 @@ GameObject:
   - component: {fileID: 2920692240848248061}
   - component: {fileID: 5755412172440645761}
   - component: {fileID: 8195330057896762298}
-  - component: {fileID: 5320360640352825665}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -277,18 +281,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5069379272976303925}
   m_Enabled: 1
---- !u!114 &5320360640352825665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5069379272976303925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 738886477f7b14e57840cd14cb0b2162, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cameras.PlayerCamera
 --- !u!1 &6447303643943535404
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8090803094475923042}
   m_Layer: 0
-  m_Name: CameraTarget
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -314,7 +306,7 @@ Transform:
   m_GameObject: {fileID: 6447303643943535404}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

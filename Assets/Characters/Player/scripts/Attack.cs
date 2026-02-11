@@ -27,17 +27,17 @@ namespace Characters.Player.scripts
         }
         
         // This shows the sphere cast range in the editor
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.red;
-    
-            var origin = transform.position;
-            var endPos = origin + transform.forward * punchRange;
-    
-            // Gizmos.DrawWireSphere(origin, punchRadius);
-            // Gizmos.DrawWireSphere(endPos, punchRadius);
-            Gizmos.DrawLine(origin, endPos);
-        }
+        // private void OnDrawGizmosSelected()
+        // {
+        //     Gizmos.color = Color.red;
+        //
+        //     var origin = transform.position;
+        //     var endPos = origin + transform.forward * punchRange;
+        //
+        //     // Gizmos.DrawWireSphere(origin, punchRadius);
+        //     // Gizmos.DrawWireSphere(endPos, punchRadius);
+        //     Gizmos.DrawLine(origin, endPos);
+        // }
         
         private void Punch()
         {

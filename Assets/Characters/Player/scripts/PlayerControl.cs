@@ -12,7 +12,6 @@ namespace Characters.Player.scripts
         private Rigidbody _rigidbody;
         private float _verticalAngle;
         private float _horizontalAngle;
-        private Transform _frontTransform;
         private Vector3 _cameraPositionRelatedToPlayer;
         
         private void Start()
@@ -26,7 +25,6 @@ namespace Characters.Player.scripts
             
             _rigidbody = GetComponent<Rigidbody>();
             _camera = GetComponentInChildren<Camera>();
-            _frontTransform= transform.Find("Front");
             _cameraPositionRelatedToPlayer = _camera.transform.position - transform.position;
             
             Debug.Log("cam position: " + _camera.transform.position);

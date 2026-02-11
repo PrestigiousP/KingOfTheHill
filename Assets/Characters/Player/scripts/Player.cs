@@ -6,13 +6,17 @@ namespace Characters.Player.scripts
     {
         public Vector3 Forward { get; private set; }
         
-        
+        private Transform _cameraTransform;
         
         // Start is called before the first frame update
         private void Start()
         {
-            var frontTransform = transform.Find("Front");
-            Forward = (frontTransform.position - transform.position).normalized;
+            _cameraTransform = transform.Find("Camera");
+        }
+
+        private void FixedUpdate()
+        {
+            Forward = (transform.position - _cameraTransform.position).normalized;
         }
     }
 }

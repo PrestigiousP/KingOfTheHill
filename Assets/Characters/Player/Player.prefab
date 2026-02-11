@@ -37,7 +37,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8090803094475923042}
   - {fileID: 2920692240848248061}
   - {fileID: 6412889052142400193}
   m_Father: {fileID: 0}
@@ -190,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.ThrowingGrenade
   projectilePrefab: {fileID: 4638094577350169245, guid: 0d29218243c0f48c7a2d72cbd73ece5c, type: 3}
   throwPoint: {fileID: 6412889052142400193}
-  throwForce: 10
+  throwForce: 20
 --- !u!114 &7843113887069456856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,37 +297,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5069379272976303925}
   m_Enabled: 1
---- !u!1 &6447303643943535404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8090803094475923042}
-  m_Layer: 0
-  m_Name: Front
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8090803094475923042
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6447303643943535404}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.62, y: 0.72, z: 1.09}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3184958833516102061}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8346258680998734087
 GameObject:
   m_ObjectHideFlags: 0

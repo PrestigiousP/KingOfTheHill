@@ -7,18 +7,25 @@ namespace Characters.Player.scripts
         public GameObject projectilePrefab;
         public Transform throwPoint;
         public float throwForce = 10f;
+        private Player _player;
+
+        private void Start()
+        {
+            _player = GetComponent<Player>();
+        }
         
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
+                // Debug.DrawLine(throwPoint.position, throwPoint.rotation * throwPoint.forward, Color.red);
                 ThrowProjectile();
             }
+            
         }
-
+        
         private void ThrowProjectile()
         {
-            // Spawn the prefab
             var projectile = Instantiate(
                 projectilePrefab, 
                 throwPoint.position, 
@@ -26,11 +33,15 @@ namespace Characters.Player.scripts
             );
         
             // TODO: refactor éventuellement
-            // Apply force to throw it
             var rb = projectile.GetComponent<Rigidbody>();
             if (rb)
             {
-                rb.AddForce(throwPoint.forward * throwForce, ForceMode.Impulse);
+                Debug.Log("camera angle: " + _player.Forward);
+                
+                var direction = (_player.Forward + new Vector3(0, _player.Forward.y + 0.5f, 0)).normalized;
+                
+                // throwPoint.forward
+                rb.AddForce(direction * throwForce, ForceMode.Impulse);
             }
         
             // Optional: Destroy after 5 seconds

@@ -6,6 +6,8 @@ namespace Characters.Player.scripts
     {
         public Vector3 Forward { get; private set; }
         
+        
+        
         // Start is called before the first frame update
         private void Start()
         {

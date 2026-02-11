@@ -2,29 +2,36 @@ using UnityEngine;
 
 namespace Characters.Player.scripts
 {
-    public class Movement : MonoBehaviour
+    public class PlayerControl : MonoBehaviour
     {
         public float moveSpeed = 5f;
         public float mouseSensitivity = 2f;
-        public float jumpForce = 5f;
+        public float jumpForce = 10f;
 
         private Camera _camera;
         private Rigidbody _rigidbody;
-        
+        private float _verticalAngle;
+        private float _horizontalAngle;
+        private Transform _frontTransform;
         private Vector3 _cameraPositionRelatedToPlayer;
-        private float _verticalAngle = 0f;
-        private float _horizontalAngle = 0f;
-
+        
         private void Start()
         {
+            _verticalAngle = 0f;
+            _horizontalAngle = 0f;
+            
             // Lock and hide the cursor
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             
             _rigidbody = GetComponent<Rigidbody>();
-            
             _camera = GetComponentInChildren<Camera>();
+            _frontTransform= transform.Find("Front");
             _cameraPositionRelatedToPlayer = _camera.transform.position - transform.position;
+            
+            Debug.Log("cam position: " + _camera.transform.position);
+            Debug.Log("player position: " + transform.position);
+            // Debug.Log("offset: " + _cameraOffset);
         }
 
         private void Update()

@@ -46,7 +46,7 @@ namespace Characters.Player.scripts
 
             foreach (var hit in hits)
             {
-                if (hit.collider.CompareTag(Tags.Enemy))
+                if (hit.collider && hit.collider.CompareTag(Tags.Enemy))
                 {
                     // TODO: fix later
                     // Push enemy

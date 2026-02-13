@@ -4,9 +4,9 @@ namespace Characters.Player.scripts
 {
     public class PlayerControl : MonoBehaviour
     {
-        public float moveSpeed = 5f;
-        public float mouseSensitivity = 2f;
-        public float jumpForce = 10f;
+        [SerializeField] public float moveSpeed = 5f;
+        [SerializeField]  public float mouseSensitivity = 2f;
+        [SerializeField] public float jumpForce = 10f;
 
         private Camera _camera;
         private Rigidbody _rigidbody;
@@ -14,7 +14,7 @@ namespace Characters.Player.scripts
         private float _horizontalAngle;
         private Vector3 _cameraPositionRelatedToPlayer;
         
-        private void Start()
+        private void Awake()
         {
             _verticalAngle = 0f;
             _horizontalAngle = 0f;
@@ -26,10 +26,6 @@ namespace Characters.Player.scripts
             _rigidbody = GetComponent<Rigidbody>();
             _camera = GetComponentInChildren<Camera>();
             _cameraPositionRelatedToPlayer = _camera.transform.position - transform.position;
-            
-            Debug.Log("cam position: " + _camera.transform.position);
-            Debug.Log("player position: " + transform.position);
-            // Debug.Log("offset: " + _cameraOffset);
         }
 
         private void Update()

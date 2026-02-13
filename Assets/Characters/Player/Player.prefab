@@ -161,8 +161,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.Attack
   punchRange: 0.1
-  punchRadius: 0.05
   punchForce: 5
+  punchDamage: 10
 --- !u!114 &8516366745103554995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +189,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.ThrowingGrenade
   projectilePrefab: {fileID: 4638094577350169245, guid: 0d29218243c0f48c7a2d72cbd73ece5c, type: 3}
   throwPoint: {fileID: 6412889052142400193}
-  throwForce: 20
+  throwForce: 50
+  explosionRadius: 8
+  explosionForce: 20
 --- !u!114 &7843113887069456856
 MonoBehaviour:
   m_ObjectHideFlags: 0

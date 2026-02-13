@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using Characters.scripts.Interfaces;
 using UnityEngine;
 using Utils;
 
@@ -6,14 +6,13 @@ namespace Characters.Player.scripts
 {
     public class Attack : MonoBehaviour
     {
-        public float punchRange = 0.1f;
-        public float punchRadius = 0.05f;
-        public float punchForce = 5f;
-        
-        private IList<RaycastHit2D> _hits;
+        [SerializeField] public float punchRange = 0.1f;
+        [SerializeField] public float punchForce = 5f;
+        [SerializeField] public float punchDamage = 10f;
+
         private Player _player;
 
-        private void Start()
+        private void Awake()
         {
             _player = GetComponent<Player>();
         }
@@ -26,19 +25,6 @@ namespace Characters.Player.scripts
             }
         }
         
-        // This shows the sphere cast range in the editor
-        // private void OnDrawGizmosSelected()
-        // {
-        //     Gizmos.color = Color.red;
-        //
-        //     var origin = transform.position;
-        //     var endPos = origin + transform.forward * punchRange;
-        //
-        //     // Gizmos.DrawWireSphere(origin, punchRadius);
-        //     // Gizmos.DrawWireSphere(endPos, punchRadius);
-        //     Gizmos.DrawLine(origin, endPos);
-        // }
-        
         private void Punch()
         {
             var hits = new RaycastHit[2];
@@ -46,16 +32,12 @@ namespace Characters.Player.scripts
 
             foreach (var hit in hits)
             {
-                if (hit.collider && hit.collider.CompareTag(Tags.Enemy))
-                {
-                    // TODO: fix later
-                    // Push enemy
-                    var rb = hit.collider.GetComponent<Rigidbody>();
-                    if (rb)
-                    {
-                        rb.AddForce(transform.forward * punchForce, ForceMode.Impulse);
-                    }
-                }
+                if (!hit.collider || !hit.collider.CompareTag(Tags.Enemy)) continue;
+                
+                // Try to get the interface from the hit object
+                var damageable = hit.collider.GetComponent<IDamageable>();
+
+                damageable?.GetPunched(transform.forward, punchDamage);
             }
         }
     }

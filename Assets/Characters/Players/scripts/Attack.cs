@@ -2,7 +2,7 @@ using Characters.scripts.Interfaces;
 using UnityEngine;
 using Utils;
 
-namespace Characters.Player.scripts
+namespace Characters.Players.scripts
 {
     public class Attack : MonoBehaviour
     {
@@ -10,11 +10,11 @@ namespace Characters.Player.scripts
         [SerializeField] public float punchForce = 5f;
         [SerializeField] public float punchDamage = 10f;
 
-        private Player _player;
+        private Players.scripts.Player _player;
 
         private void Awake()
         {
-            _player = GetComponent<Player>();
+            _player = GetComponent<Players.scripts.Player>();
         }
         
         private void Update()

@@ -1,8 +1,7 @@
-using System;
 using Characters.scripts.Interfaces;
 using UnityEngine;
 
-namespace Characters.Player.scripts
+namespace Characters.Players.scripts
 {
     public class Player : MonoBehaviour, IDamageable, IKnockBack
     {

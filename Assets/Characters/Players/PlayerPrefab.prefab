@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 71253319826262066}
   - component: {fileID: 3739723096544462386}
   - component: {fileID: 8516366745103554995}
-  - component: {fileID: 3402147750894444709}
   - component: {fileID: 7843113887069456856}
+  - component: {fileID: 6025916093132875976}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PlayerPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,23 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249b95c9559d4b77a76d7613123ba275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.Player
---- !u!114 &3402147750894444709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320243403379613895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f59de96ef614d4eadbfc87553d968e6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.scripts.ThrowingGrenade
-  projectilePrefab: {fileID: 4638094577350169245, guid: 0d29218243c0f48c7a2d72cbd73ece5c, type: 3}
-  throwPoint: {fileID: 6412889052142400193}
-  throwForce: 50
-  explosionRadius: 8
-  explosionForce: 20
 --- !u!114 &7843113887069456856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,6 +190,22 @@ MonoBehaviour:
   moveSpeed: 5
   mouseSensitivity: 2
   jumpForce: 10
+--- !u!114 &6025916093132875976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320243403379613895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea13aa8bf79b4f2cb8886c563f810373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Characters.Players.scripts.RopeTrap
+  projectilePrefab: {fileID: 285684748444925908, guid: b3ebe46e5d5da448aac6ebd565b0d268, type: 3}
+  throwPoint: {fileID: 6412889052142400193}
+  throwForce: 10
+  throwAngleY: 0.75
 --- !u!1 &5069379272976303925
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,11 +1,13 @@
-using Characters.scripts.Interfaces;
+using Classes.Interfaces;
+using Classes.Players;
 using UnityEngine;
 
 namespace Characters.Players.scripts
 {
-    public class Player : MonoBehaviour, IDamageable, IKnockBack
+    public class Player : MonoBehaviour, IDamageable, IKnockBack, IPlayerState
     {
         public Vector3 Forward { get; private set; }
+        public PlayerState PlayerState { get; set; }
         
         private Rigidbody _rb;
         private Transform _cameraTransform;
@@ -14,6 +16,8 @@ namespace Characters.Players.scripts
         {
             _cameraTransform = transform.Find("Camera");
             _rb = GetComponent<Rigidbody>();
+
+            PlayerState = PlayerState.Normal;
         }
 
         private void FixedUpdate()

@@ -1,42 +1,55 @@
 using System;
-using Characters.scripts.Shared;
+using Characters.Players.scripts;
+using Classes.Interfaces;
+using Classes.Players;
 using UnityEngine;
 
 namespace Tools.Traps.scripts
 {
-    public class RopeTrap : Throwable
-    { 
-        [SerializeField] public float pullForce = 10f;
-        
-        private GameObject _firstTrap;
+    public class RopeTrap : MonoBehaviour
+    {
+        public float pullForce = 10f;
+        public GameObject projectilePrefab;
+        public Transform throwPoint;
+        public float throwForce = 50f;
+        public float throwAngleY = 0.75f;
+
+        private RopeTrapDetector _firstTrap;
         private GameObject _firstTrapCollidedObject;
+        private Collider _firstTrapCollidedObjectCollider;
+        private bool _isFirstCollidedObjectPlayer;
+        private Player _firstCollidedPlayer;
         private bool _isPullingFirstTrap;
         private Vector3 _firstTrapPullDirection;
-        
-        private GameObject _secondTrap;
+
+        private RopeTrapDetector _secondTrap;
         private GameObject _secondTrapCollidedObject;
+        private Collider _secondTrapCollidedObjectCollider;
+        private bool _isSecondCollidedObjectPlayer;
+        private Player _secondCollidedPlayer;
         private bool _isPullingSecondTrap;
         private Vector3 _secondTrapPullDirection;
         
+        private Player _player;
+
+        private void Awake()
+        {
+            _player = GetComponent<Player>();
+        }
+
         private void Update()
         {
             if (!Input.GetMouseButtonDown(0)) return;
-            
+
             if (!_firstTrap)
             {
-                _firstTrap = ThrowProjectile();
-                var ropeTrapDetector = _firstTrap.GetComponent<RopeTrapDetector>();
-                ropeTrapDetector.SetTrapTag(TrapTag.First);
-                ropeTrapDetector.OnTrapCollided += HandleTrapCollision;
+                _firstTrap = ThrowProjectile(TrapTag.First);
                 return;
             }
 
             if (!_secondTrap)
             {
-                _secondTrap = ThrowProjectile();
-                var ropeTrapDetector = _secondTrap.GetComponent<RopeTrapDetector>();
-                ropeTrapDetector.SetTrapTag(TrapTag.Second);
-                ropeTrapDetector.OnTrapCollided += HandleTrapCollision;
+                _secondTrap = ThrowProjectile(TrapTag.Second);
             }
         }
 
@@ -44,158 +57,118 @@ namespace Tools.Traps.scripts
         {
             if (_isPullingFirstTrap)
             {
-                PullObject(_firstTrapCollidedObject.transform, _firstTrap.transform, _firstTrapPullDirection);
+                // _firstCollidedPlayer.PlayerState = _isFirstCollidedObjectPlayer 
+                //     ? PlayerState.Stunned 
+                //     : _firstCollidedPlayer.PlayerState;
+
+                PullObject(_firstTrapCollidedObject.transform, _firstTrapPullDirection);
             }
 
             if (_isPullingSecondTrap)
             {
-                PullObject(_secondTrapCollidedObject.transform, _secondTrap.transform, _secondTrapPullDirection);
+                // _secondCollidedPlayer.PlayerState = _isSecondCollidedObjectPlayer 
+                //     ? PlayerState.Stunned 
+                //     : _secondCollidedPlayer.PlayerState;
+                
+                PullObject(_secondTrapCollidedObject.transform, _secondTrapPullDirection);
             }
-            
-            
         }
 
-        private void HandleTrapCollision(TrapTag trapTag, GameObject collidedObject)
+        private void OnTrapCollided(TrapTag trapTag, GameObject collidedObject)
         {
             switch (trapTag)
             {
                 case TrapTag.First:
                     _firstTrapCollidedObject = collidedObject;
-                    
-                    // Remove physics components from trap
-                    var firstRb = _firstTrap.GetComponent<Rigidbody>();
-                    if (firstRb != null) Destroy(firstRb);
-                    
-                    var firstCollider = _firstTrap.GetComponent<Collider>();
-                    if (firstCollider != null) Destroy(firstCollider);
-                    
-                    // Parent trap to collided object
-                    _firstTrap.transform.SetParent(collidedObject.transform);
-                    
+                    _isFirstCollidedObjectPlayer = _firstTrapCollidedObject.TryGetComponent<Player>(out var firstCollidedPlayer);
+                    _firstCollidedPlayer = firstCollidedPlayer;
+                    Debug.Log("first trap collided with " + collidedObject.name);
                     break;
                 case TrapTag.Second:
-                {
                     _secondTrapCollidedObject = collidedObject;
-                    
-                    // Remove physics components from trap
-                    var secondRb = _secondTrap.GetComponent<Rigidbody>();
-                    if (secondRb != null) Destroy(secondRb);
-                    
-                    var secondCollider = _secondTrap.GetComponent<Collider>();
-                    if (secondCollider != null) Destroy(secondCollider);
-                    
-                    // Parent trap to collided object
-                    _secondTrap.transform.SetParent(collidedObject.transform);
-                    
+                    _isSecondCollidedObjectPlayer = _secondTrapCollidedObject.TryGetComponent<Player>(out var secondCollidedPlayer);
+                    _secondCollidedPlayer = secondCollidedPlayer;
+                    Debug.Log("second trap collided with " + collidedObject.name);
                     break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(trapTag), trapTag, null);
             }
 
-            if (!(_firstTrapCollidedObject && _secondTrapCollidedObject))
-            {
-                return;
-            }
+            bool haveBothTrapsCollided = _firstTrapCollidedObject != null && _secondTrapCollidedObject != null;
+            if (!haveBothTrapsCollided) return;
             
             var firstTrapCollidedObjRb = _firstTrapCollidedObject.GetComponent<Rigidbody>();
             var secondTrapCollidedObjRb = _secondTrapCollidedObject.GetComponent<Rigidbody>();
-
+                
             if (firstTrapCollidedObjRb == null && secondTrapCollidedObjRb == null)
             {
                 ResetTraps();
                 return;
             }
-
-            if (firstTrapCollidedObjRb != null)
+                
+            if (firstTrapCollidedObjRb)
             {
                 _isPullingFirstTrap = true;
-                _firstTrapPullDirection = (_secondTrapCollidedObject.transform.position 
+                _firstTrapPullDirection = (_secondTrapCollidedObject.transform.position
                                            - _firstTrapCollidedObject.transform.position).normalized;
             }
 
-            if (secondTrapCollidedObjRb != null)
-            {
-                _isPullingSecondTrap = true;
-                _secondTrapPullDirection = (_firstTrapCollidedObject.transform.position 
-                                            - _secondTrapCollidedObject.transform.position).normalized;
-            }
-
+            if (!secondTrapCollidedObjRb) return;
+            
+            _isPullingSecondTrap = true;
+            _secondTrapPullDirection = (_firstTrapCollidedObject.transform.position
+                                        - _secondTrapCollidedObject.transform.position).normalized;
         }
-
-        private void PullObject(Transform objectTransform, Transform trapTransform, Vector3 direction)
+        
+        private void PullObject(Transform objectTransform, Vector3 direction)
         {
             objectTransform.position += direction * (pullForce * Time.deltaTime);
-            // trapTransform.position += newPosition;
 
-            var firstTrapCollider = _firstTrapCollidedObject.GetComponent<Collider>();
-            var secondTrapCollider = _secondTrapCollidedObject.GetComponent<Collider>();
+            if (!_firstTrapCollidedObjectCollider)
+            {
+                _firstTrapCollidedObjectCollider = _firstTrapCollidedObject.GetComponent<Collider>();
+            }
 
-            if (!firstTrapCollider || !secondTrapCollider) return;
+            if (!_secondTrapCollidedObjectCollider)
+            {
+                _secondTrapCollidedObjectCollider = _secondTrapCollidedObject.GetComponent<Collider>();
+            }
             
-            if (firstTrapCollider.bounds.Intersects(secondTrapCollider.bounds))
+            if (!_firstTrapCollidedObjectCollider || !_secondTrapCollidedObjectCollider) return;
+
+            if (_firstTrapCollidedObjectCollider.bounds.Intersects(_secondTrapCollidedObjectCollider.bounds))
             {
                 ResetTraps();
             }
         }
-
+        
         private void ResetTraps()
         {
-            if (_firstTrap != null)
-            {
-                var detector = _firstTrap.GetComponent<RopeTrapDetector>();
-                if (detector != null)
-                {
-                    detector.OnTrapCollided -= HandleTrapCollision;
-                }
-                // Unparent from collided object
-                _firstTrap.transform.SetParent(null);
-                Destroy(_firstTrap);
-            }
-            
-            if (_secondTrap != null)
-            {
-                var detector = _secondTrap.GetComponent<RopeTrapDetector>();
-                if (detector != null)
-                {
-                    detector.OnTrapCollided -= HandleTrapCollision;
-                }
-                // Unparent from collided object
-                _secondTrap.transform.SetParent(null);
-                Destroy(_secondTrap);
-            }
-            
-            _firstTrap = null;
+            if (_firstTrap) Destroy(_firstTrap.gameObject);
             _firstTrapCollidedObject = null;
             _isPullingFirstTrap = false;
             _firstTrapPullDirection = default;
-
-            _secondTrap = null;
+            
+            if (_secondTrap) Destroy(_secondTrap.gameObject);
             _secondTrapCollidedObject = null;
             _isPullingSecondTrap = false;
             _secondTrapPullDirection = default;
         }
 
-        private void OnDestroy()
+        private RopeTrapDetector ThrowProjectile(TrapTag trapTag)
         {
-            // Clean up event subscriptions
-            if (_firstTrap != null)
-            {
-                var detector = _firstTrap.GetComponent<RopeTrapDetector>();
-                if (detector != null)
-                {
-                    detector.OnTrapCollided -= HandleTrapCollision;
-                }
-            }
+            var projectile = Instantiate(
+                projectilePrefab,
+                throwPoint.position,
+                throwPoint.rotation
+            );
+
+            var projectileType = projectile.GetComponent<RopeTrapDetector>();
+            projectileType.TrapTag = trapTag;
+            projectileType.OnTrapCollided += OnTrapCollided;
             
-            if (_secondTrap != null)
-            {
-                var detector = _secondTrap.GetComponent<RopeTrapDetector>();
-                if (detector != null)
-                {
-                    detector.OnTrapCollided -= HandleTrapCollision;
-                }
-            }
+            var direction = (_player.Forward + new Vector3(0, _player.Forward.y + throwAngleY, 0)).normalized;
+            projectileType.Rigidbody.AddForce(direction * throwForce, ForceMode.Impulse);
+
+            return projectileType;
         }
     }
 }

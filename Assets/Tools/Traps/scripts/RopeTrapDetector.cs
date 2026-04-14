@@ -1,32 +1,42 @@
 using UnityEngine;
 using System;
+using UnityEngine.Serialization;
 
 namespace Tools.Traps.scripts
 {
     public class RopeTrapDetector : MonoBehaviour
     {
-        private TrapTag _trapTag;
-        private Rigidbody _rb;
+        public TrapTag TrapTag { get; set; }
+        public Rigidbody Rigidbody { get; private set; }
         
         public event Action<TrapTag, GameObject> OnTrapCollided;
+
+        private GameObject _collidedObject;
         
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
-        }
-
-        public void SetTrapTag(TrapTag trapTag)
-        {
-            _trapTag = trapTag;
+            Rigidbody = GetComponent<Rigidbody>();
         }
         
         private void OnCollisionEnter(Collision other)
         {
-            if (_rb == null) return;
+            if (Rigidbody == null) return;
 
-            _rb.constraints = RigidbodyConstraints.FreezeAll;
+            Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             
-            OnTrapCollided?.Invoke(_trapTag, other.gameObject);
+            HandleTrapCollision(other.gameObject);
+        }
+
+        private void HandleTrapCollision(GameObject collidedObject)
+        {
+            _collidedObject = collidedObject;
+
+            Destroy(Rigidbody);
+            Destroy(GetComponent<Collider>());
+
+            transform.SetParent(collidedObject.transform);
+            
+            OnTrapCollided?.Invoke(TrapTag, collidedObject);
         }
     }
 }

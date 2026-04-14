@@ -1,7 +1,8 @@
 using System;
-using Characters.scripts.Interfaces;
+using Classes;
+using Classes.Interfaces;
+using Classes.Utils;
 using UnityEngine;
-using Utils;
 
 namespace Characters.Npcs.scripts
 {

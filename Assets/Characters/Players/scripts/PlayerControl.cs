@@ -1,3 +1,4 @@
+using Classes.Players;
 using UnityEngine;
 
 namespace Characters.Players.scripts
@@ -14,8 +15,12 @@ namespace Characters.Players.scripts
         private float _horizontalAngle;
         private Vector3 _cameraPositionRelatedToPlayer;
         
+        private Player _player;
+        
         private void Awake()
         {
+            _player = GetComponent<Player>();
+            
             _verticalAngle = 0f;
             _horizontalAngle = 0f;
             
@@ -45,6 +50,8 @@ namespace Characters.Players.scripts
 
         private void HandleMovement()
         {
+            if (_player.PlayerState == PlayerState.Stunned) return;
+            
             // Get WASD input
             float horizontal = Input.GetAxis("Horizontal"); // A and D
             float vertical = Input.GetAxis("Vertical");     // W and S
